@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Login</title>
+    <title>Kodinela Gaming Arena | Download PC & Android Games</title>
 
     <style>
+        :root {
+            --bg-body: #20232b;
+            --bg-card: #25262d;
+            --bg-input: #202127;
+            --neon-cyan: #35eaff;
+            --neon-pink: #ff0a6c;
+            --text-main: #eeeeee;
+            --text-dim: #777983;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,370 +24,438 @@
         }
 
         body {
+            background: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #20232b;
         }
 
         /* =========================
-           LOGIN CONTAINER
+           HEADER / NAVBAR
         ========================== */
-        .login-container {
-            position: relative;
-            width: 440px;
-            padding: 55px 45px 40px;
-            background: #25262d;
-            border-radius: 25px;
-            box-shadow:
-                15px 15px 30px rgba(0, 0, 0, 0.35),
-                -10px -10px 25px rgba(255, 255, 255, 0.03);
-            overflow: hidden;
-        }
-
-        /* Shake animation endapo mtumiaji ataacha wazi */
-        .login-container.shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-
-        /* =========================
-           NEON ROTATING BORDER
-        ========================== */
-        .login-container::before {
-            content: "";
-            position: absolute;
-            inset: -50%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0deg 36deg,
-                #35eaff 36deg 48deg,
-                transparent 48deg 126deg,
-                #ff0a6c 126deg 138deg,
-                transparent 138deg 216deg,
-                #35eaff 216deg 228deg,
-                transparent 228deg 306deg,
-                #ff0a6c 306deg 318deg,
-                transparent 318deg 360deg
-            );
-            animation: neon-rotate 5s linear infinite;
-            filter: blur(2px) drop-shadow(0 0 12px #35eaff);
-            will-change: transform; /* Inalainisha animation kwenye simu na PC */
-        }
-
-        .login-container::after {
-            content: "";
-            position: absolute;
-            inset: 4px;
-            background: #25262d;
-            border-radius: 21px;
-            z-index: 0;
-        }
-
-        @keyframes neon-rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* =========================
-           LOGIN CONTENT
-        ========================== */
-        .login-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* =========================
-           TITLE
-        ========================== */
-        .title {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .title h1 {
-            color: #eeeeee;
-            font-size: 28px;
-            letter-spacing: 7px;
-            font-weight: 700;
-        }
-
-        .title svg {
-            width: 26px;
-            height: 26px;
-        }
-
-        .title .user-icon {
-            fill: #ff0a6c;
-            filter: drop-shadow(0 0 6px #ff0a6c);
-        }
-
-        .title .lock-icon {
-            fill: #35eaff;
-            filter: drop-shadow(0 0 6px #35eaff);
-        }
-
-        /* =========================
-           INPUT BOX & TOGGLE
-        ========================== */
-        .input-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 58px;
-            border: 1px solid transparent;
-            outline: none;
-            border-radius: 30px;
-            padding: 0 50px 0 25px;
-            background: #202127;
-            color: white;
-            font-size: 16px;
-            box-shadow:
-                inset 5px 5px 10px rgba(0, 0, 0, 0.3),
-                inset -3px -3px 8px rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-        }
-
-        .input-box input::placeholder {
-            color: #777983;
-            font-weight: 600;
-        }
-
-        .input-box input:focus {
-            border-color: rgba(53, 234, 255, 0.5);
-            box-shadow:
-                0 0 10px rgba(53, 234, 255, 0.35),
-                inset 5px 5px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Custom toggle password button */
-        .toggle-password {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toggle-password svg {
-            width: 20px;
-            height: 20px;
-            fill: #777983;
-            transition: 0.3s;
-        }
-
-        .toggle-password:hover svg {
-            fill: #35eaff;
-        }
-
-        .error-message {
-            color: #ff0a6c;
-            font-size: 13px;
-            margin: -12px 0 15px 15px;
-            display: none;
-        }
-
-        /* =========================
-           SIGN IN BUTTON
-        ========================== */
-        .sign-in {
-            width: 100%;
-            height: 58px;
-            border: none;
-            border-radius: 30px;
-            background: #35d0e3;
-            color: #172127;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 5px;
-            box-shadow: 0 0 15px rgba(53, 234, 255, 0.45);
-            transition: 0.3s;
-        }
-
-        .sign-in:hover {
-            transform: translateY(-2px);
-            background: #35eaff;
-            box-shadow: 0 0 25px rgba(53, 234, 255, 0.75);
-        }
-
-        .sign-in:active {
-            transform: scale(0.98);
-        }
-
-        /* =========================
-           BOTTOM LINKS
-        ========================== */
-        .links {
+        header {
+            background: var(--bg-card);
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
-            margin-top: 25px;
-            padding: 0 10px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
         }
 
-        .links a {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             text-decoration: none;
-            color: #eeeeee;
-            font-size: 15px;
+        }
+
+        .brand svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--neon-cyan);
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: var(--text-main);
+        }
+
+        .brand h1 span {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
             font-weight: 600;
             transition: 0.3s;
         }
 
-        .links a:first-child:hover {
-            color: #35eaff;
+        nav a:hover, nav a.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
         }
 
-        .links a:last-child {
-            color: #ff0a6c;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .links a:last-child:hover {
-            color: #ff4c91;
-            text-shadow: 0 0 10px #ff0a6c;
+        .login-nav-btn {
+            padding: 8px 22px;
+            border-radius: 20px;
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--text-main);
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 10, 108, 0.3);
         }
 
-        /* Responsive Design */
-        @media (max-width: 500px) {
-            .login-container {
-                width: 90%;
-                padding: 45px 25px 35px;
-            }
+        .login-nav-btn:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
 
-            .title h1 {
-                font-size: 22px;
-                letter-spacing: 5px;
-            }
+        /* =========================
+           HERO BANNER
+        ========================== */
+        .hero {
+            margin: 30px 5%;
+            background: linear-gradient(135deg, rgba(37,38,45,0.9), rgba(32,33,39,0.95)),
+                        url('https://picsum.photos/1200/400?gaming') center/cover;
+            border-radius: 25px;
+            padding: 50px 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(53, 234, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+        }
+
+        .hero-badge {
+            background: var(--neon-pink);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            max-width: 500px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-main {
+            padding: 12px 30px;
+            border-radius: 25px;
+            background: var(--neon-cyan);
+            color: #172127;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(53, 234, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--neon-cyan);
+        }
+
+        /* =========================
+           SEARCH & CATEGORIES
+        ========================== */
+        .controls-section {
+            margin: 0 5% 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 48px;
+            background: var(--bg-input);
+            border: none;
+            outline: none;
+            border-radius: 25px;
+            padding: 0 20px 0 45px;
+            color: var(--text-main);
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-dim);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: none;
+            color: var(--text-dim);
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--neon-cyan);
+            color: #172127;
+            box-shadow: 0 0 12px rgba(53, 234, 255, 0.4);
+        }
+
+        /* =========================
+           GAMES GRID
+        ========================== */
+        .section-title {
+            margin: 0 5% 20px;
+            font-size: 22px;
+            letter-spacing: 2px;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 12px;
+        }
+
+        .games-grid {
+            margin: 0 5% 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(53, 234, 255, 0.4);
+            box-shadow: 0 0 20px rgba(53, 234, 255, 0.2);
+        }
+
+        .game-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: var(--bg-input);
+        }
+
+        .game-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .platform-tag {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .game-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: auto;
+            margin-bottom: 15px;
+        }
+
+        .card-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .card-btn:hover {
+            background: var(--neon-cyan);
+            color: #172127;
+            box-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-card);
+            padding: 30px 5%;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; } /* Ongeza Mobile Menu baadaye */
+            .hero h2 { font-size: 28px; }
+            .controls-section { flex-direction: column; align-items: stretch; }
+            .search-box { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container" id="loginContainer">
-        <div class="login-content">
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="brand">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <h1>KODINELA<span>ARENA</span></h1>
+        </a>
 
-            <!-- TITLE WITH SVG ICONS -->
-            <div class="title">
-                <svg class="user-icon" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                <h1>LOGIN</h1>
-                <svg class="lock-icon" viewBox="0 0 24 24">
-                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                </svg>
-            </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#">Games</a></li>
+                <li><a href="#">Accessories</a></li>
+            </ul>
+        </nav>
 
-            <!-- FORM WRAPPER -->
-            <form id="loginForm" autocomplete="on">
-
-                <!-- USERNAME -->
-                <div class="input-box">
-                    <input 
-                        type="text" 
-                        id="username" 
-                        placeholder="Username" 
-                        aria-label="Username"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
-
-                <!-- PASSWORD -->
-                <div class="input-box">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        placeholder="Password" 
-                        aria-label="Password"
-                        autocomplete="current-password"
-                        required
-                    >
-                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
-                        <svg id="eyeIcon" viewBox="0 0 24 24">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="error-message" id="errorMsg">Tafadhali jaza nafasi zote!</div>
-
-                <!-- SIGN IN BUTTON -->
-                <button type="submit" class="sign-in">
-                    Sign in
-                </button>
-
-            </form>
-
-            <!-- LINKS -->
-            <div class="links">
-                <a href="#">Forgot Password</a>
-                <a href="#">Sign up</a>
-            </div>
-
+        <div class="header-actions">
+            <a href="login.html" class="login-nav-btn">Login</a>
         </div>
-    </div>
+    </header>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        const loginForm = document.getElementById('loginForm');
-        const loginContainer = document.getElementById('loginContainer');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const togglePassword = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const errorMsg = document.getElementById('errorMsg');
+    <!-- HERO BANNER -->
+    <section class="hero">
+        <span class="hero-badge">FEATURED GAME</span>
+        <h2>CYBERPUNK 2077</h2>
+        <p>Ingia kwenye mji wa siku zijazo wa Night City. Download leo upate uwezo wa kucheza kwa ubora wa 4K.</p>
+        <a href="#" class="btn-main">Download Now (55 GB)</a>
+    </section>
 
-        // Toggle show/hide password
-        togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            
-            // Badilisha muonekano wa eye icon
-            if (isPassword) {
-                eyeIcon.style.fill = '#35eaff';
-                togglePassword.setAttribute('aria-label', 'Hide password');
-            } else {
-                eyeIcon.style.fill = '#777983';
-                togglePassword.setAttribute('aria-label', 'Show password');
-            }
-        });
+    <!-- SEARCH & CATEGORIES -->
+    <section class="controls-section">
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" placeholder="Tafuta game au accessory...">
+        </div>
 
-        // Form Submission and Validation
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        <div class="category-tabs">
+            <button class="tab-btn active">All</button>
+            <button class="tab-btn">PC Games</button>
+            <button class="tab-btn">Android Games</button>
+            <button class="tab-btn">Action</button>
+            <button class="tab-btn">Racing</button>
+            <button class="tab-btn">Accessories</button>
+        </div>
+    </section>
 
-            if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
-                errorMsg.style.display = 'block';
-                loginContainer.classList.add('shake');
-                
-                setTimeout(() => {
-                    loginContainer.classList.remove('shake');
-                }, 400);
-            } else {
-                errorMsg.style.display = 'none';
-                alert('Login imefanikiwa! Karibu ' + usernameInput.value);
-                // Hapa unaweza kuweka code za kupeleka mtumiaji kwenye Dashboard
-                window.location.href = "dashboard.html";
-            }
-        });
-    </script>
+    <!-- TRENDING GAMES -->
+    <h3 class="section-title">POPULAR GAMES</h3>
+    <section class="games-grid">
+
+        <!-- GAME CARD 1 -->
+        <div class="game-card">
+            <img src="https://picsum.photos/300/180?racing" class="game-img" alt="Need For Speed">
+            <div class="game-info">
+                <span class="platform-tag">PC Game • Racing</span>
+                <h4 class="game-title">Need For Speed Unbound</h4>
+                <div class="game-meta">
+                    <span>Size: 30 GB</span>
+                    <span>★ 4.8</span>
+                </div>
+                <a href="#" class="card-btn">View & Download</a>
+            </div>
+        </div>
+
+        <!-- GAME CARD 2 -->
+        <div class="game-card">
+            <img src="https://picsum.photos/300/180?action" class="game-img" alt="GTA V">
+            <div class="game-info">
+                <span class="platform-tag">PC Game • Action</span>
+                <h4 class="game-title">GTA V Premium Edition</h4>
+                <div class="game-meta">
+                    <span>Size: 90 GB</span>
+                    <span>★ 4.9</span>
+                </div>
+                <a href="#" class="card-btn">View & Download</a>
+            </div>
+        </div>
+
+        <!-- GAME CARD 3 -->
+        <div class="game-card">
+            <img src="https://picsum.photos/300/180?mobile" class="game-img" alt="PUBG Mobile">
+            <div class="game-info">
+                <span class="platform-tag">Android • Shooter</span>
+                <h4 class="game-title">PUBG Mobile APK + OBB</h4>
+                <div class="game-meta">
+                    <span>Size: 2.1 GB</span>
+                    <span>★ 4.5</span>
+                </div>
+                <a href="#" class="card-btn">View & Download</a>
+            </div>
+        </div>
+
+        <!-- ACCESSORY CARD 4 -->
+        <div class="game-card">
+            <img src="https://picsum.photos/300/180?controller" class="game-img" alt="Controller">
+            <div class="game-info">
+                <span class="platform-tag" style="color:var(--neon-pink);">Accessory</span>
+                <h4 class="game-title">Wireless RGB Gamepad</h4>
+                <div class="game-meta">
+                    <span>PC/Android</span>
+                    <span>★ 4.7</span>
+                </div>
+                <a href="#" class="card-btn">View Details</a>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Kodinela Gaming Arena. Haki zote zimehifadhiwa.</p>
+    </footer>
 
 </body>
 </html>
