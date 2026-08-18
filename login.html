@@ -3,19 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Cyber Dashboard</title>
+    <title>Neon Login</title>
 
     <style>
-        :root {
-            --bg-body: #20232b;
-            --bg-card: #25262d;
-            --bg-input: #202127;
-            --neon-cyan: #35eaff;
-            --neon-pink: #ff0a6c;
-            --text-main: #eeeeee;
-            --text-dim: #777983;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -25,417 +15,369 @@
 
         body {
             min-height: 100vh;
-            background: var(--bg-body);
-            color: var(--text-main);
             display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #20232b;
         }
 
         /* =========================
-           SIDEBAR
+           LOGIN CONTAINER
         ========================== */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-card);
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 10px 0 25px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-
-        .brand svg {
-            width: 32px;
-            height: 32px;
-            fill: var(--neon-cyan);
-            filter: drop-shadow(0 0 8px var(--neon-cyan));
-        }
-
-        .brand h2 {
-            font-size: 20px;
-            letter-spacing: 3px;
-            color: var(--text-main);
-        }
-
-        .brand h2 span {
-            color: var(--neon-pink);
-            text-shadow: 0 0 8px var(--neon-pink);
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .nav-links a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 14px 20px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text-dim);
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-main);
-            background: var(--bg-input);
-            box-shadow: 
-                inset 3px 3px 6px rgba(0,0,0,0.4),
-                0 0 12px rgba(53, 234, 255, 0.2);
-        }
-
-        .nav-links a.active svg, .nav-links a:hover svg {
-            fill: var(--neon-cyan);
-            filter: drop-shadow(0 0 5px var(--neon-cyan));
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
-            color: var(--neon-pink);
-            text-decoration: none;
-            font-weight: 700;
-            border-radius: 15px;
-            background: var(--bg-input);
-            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4);
-            transition: 0.3s;
-        }
-
-        .logout-btn:hover {
-            box-shadow: 0 0 15px rgba(255, 10, 108, 0.4);
-            text-shadow: 0 0 8px var(--neon-pink);
-        }
-
-        /* =========================
-           MAIN CONTENT AREA
-        ========================== */
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        /* HEADER */
-        .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-        }
-
-        .search-box {
+        .login-container {
             position: relative;
-            width: 320px;
-        }
-
-        .search-box input {
-            width: 100%;
-            height: 48px;
-            background: var(--bg-input);
-            border: none;
-            outline: none;
+            width: 440px;
+            padding: 55px 45px 40px;
+            background: #25262d;
             border-radius: 25px;
-            padding: 0 20px 0 45px;
-            color: var(--text-main);
-            box-shadow: 
-                inset 4px 4px 8px rgba(0,0,0,0.4),
-                inset -2px -2px 6px rgba(255,255,255,0.02);
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            fill: var(--text-dim);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
-            padding: 2px;
-            box-shadow: 0 0 10px rgba(53, 234, 255, 0.5);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--bg-card);
-        }
-
-        /* STATS GRID */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 35px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 
-                10px 10px 20px rgba(0,0,0,0.3),
-                -5px -5px 15px rgba(255,255,255,0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow:
+                15px 15px 30px rgba(0, 0, 0, 0.35),
+                -10px -10px 25px rgba(255, 255, 255, 0.03);
             overflow: hidden;
         }
 
-        .stat-card::before {
+        /* Shake animation endapo mtumiaji ataacha wazi */
+        .login-container.shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        /* =========================
+           NEON ROTATING BORDER
+        ========================== */
+        .login-container::before {
             content: "";
             position: absolute;
-            top: 0; left: 0;
-            width: 4px; height: 100%;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan);
+            inset: -50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg 36deg,
+                #35eaff 36deg 48deg,
+                transparent 48deg 126deg,
+                #ff0a6c 126deg 138deg,
+                transparent 138deg 216deg,
+                #35eaff 216deg 228deg,
+                transparent 228deg 306deg,
+                #ff0a6c 306deg 318deg,
+                transparent 318deg 360deg
+            );
+            animation: neon-rotate 5s linear infinite;
+            filter: blur(2px) drop-shadow(0 0 12px #35eaff);
+            will-change: transform; /* Inalainisha animation kwenye simu na PC */
         }
 
-        .stat-card.pink::before {
-            background: var(--neon-pink);
-            box-shadow: 0 0 10px var(--neon-pink);
+        .login-container::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: #25262d;
+            border-radius: 21px;
+            z-index: 0;
         }
 
-        .stat-card h4 {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-bottom: 10px;
+        @keyframes neon-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .stat-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-main);
+        /* =========================
+           LOGIN CONTENT
+        ========================== */
+        .login-content {
+            position: relative;
+            z-index: 2;
         }
 
-        /* CONTENT PANELS */
-        .dashboard-panels {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-        }
-
-        .panel {
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 
-                10px 10px 20px rgba(0,0,0,0.3),
-                -5px -5px 15px rgba(255,255,255,0.02);
-        }
-
-        .panel-header {
+        /* =========================
+           TITLE
+        ========================== */
+        .title {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .title h1 {
+            color: #eeeeee;
+            font-size: 28px;
+            letter-spacing: 7px;
+            font-weight: 700;
+        }
+
+        .title svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .title .user-icon {
+            fill: #ff0a6c;
+            filter: drop-shadow(0 0 6px #ff0a6c);
+        }
+
+        .title .lock-icon {
+            fill: #35eaff;
+            filter: drop-shadow(0 0 6px #35eaff);
+        }
+
+        /* =========================
+           INPUT BOX & TOGGLE
+        ========================== */
+        .input-box {
+            position: relative;
             margin-bottom: 20px;
         }
 
-        .panel-header h3 {
-            font-size: 18px;
-            letter-spacing: 1px;
+        .input-box input {
+            width: 100%;
+            height: 58px;
+            border: 1px solid transparent;
+            outline: none;
+            border-radius: 30px;
+            padding: 0 50px 0 25px;
+            background: #202127;
+            color: white;
+            font-size: 16px;
+            box-shadow:
+                inset 5px 5px 10px rgba(0, 0, 0, 0.3),
+                inset -3px -3px 8px rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
         }
 
-        /* CYBER CHART PLACEHOLDER */
-        .chart-placeholder {
-            height: 220px;
-            background: var(--bg-input);
-            border-radius: 15px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 20px;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.4);
+        .input-box input::placeholder {
+            color: #777983;
+            font-weight: 600;
         }
 
-        .bar {
-            width: 30px;
-            background: linear-gradient(to top, var(--neon-cyan), var(--neon-pink));
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(53, 234, 255, 0.4);
-            transition: height 0.5s ease;
+        .input-box input:focus {
+            border-color: rgba(53, 234, 255, 0.5);
+            box-shadow:
+                0 0 10px rgba(53, 234, 255, 0.35),
+                inset 5px 5px 10px rgba(0, 0, 0, 0.3);
         }
 
-        /* ACTIVITY LIST */
-        .activity-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .activity-item {
+        /* Custom toggle password button */
+        .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
             display: flex;
             align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: #777983;
+            transition: 0.3s;
+        }
+
+        .toggle-password:hover svg {
+            fill: #35eaff;
+        }
+
+        .error-message {
+            color: #ff0a6c;
+            font-size: 13px;
+            margin: -12px 0 15px 15px;
+            display: none;
+        }
+
+        /* =========================
+           SIGN IN BUTTON
+        ========================== */
+        .sign-in {
+            width: 100%;
+            height: 58px;
+            border: none;
+            border-radius: 30px;
+            background: #35d0e3;
+            color: #172127;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+            box-shadow: 0 0 15px rgba(53, 234, 255, 0.45);
+            transition: 0.3s;
+        }
+
+        .sign-in:hover {
+            transform: translateY(-2px);
+            background: #35eaff;
+            box-shadow: 0 0 25px rgba(53, 234, 255, 0.75);
+        }
+
+        .sign-in:active {
+            transform: scale(0.98);
+        }
+
+        /* =========================
+           BOTTOM LINKS
+        ========================== */
+        .links {
+            display: flex;
             justify-content: space-between;
-            padding: 12px 15px;
-            background: var(--bg-input);
-            border-radius: 12px;
-            font-size: 14px;
+            margin-top: 25px;
+            padding: 0 10px;
         }
 
-        .activity-item .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 6px var(--neon-cyan);
+        .links a {
+            text-decoration: none;
+            color: #eeeeee;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; }
-            .dashboard-panels { grid-template-columns: 1fr; }
+        .links a:first-child:hover {
+            color: #35eaff;
+        }
+
+        .links a:last-child {
+            color: #ff0a6c;
+        }
+
+        .links a:last-child:hover {
+            color: #ff4c91;
+            text-shadow: 0 0 10px #ff0a6c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .login-container {
+                width: 90%;
+                padding: 45px 25px 35px;
+            }
+
+            .title h1 {
+                font-size: 22px;
+                letter-spacing: 5px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div>
-            <div class="brand">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    <div class="login-container" id="loginContainer">
+        <div class="login-content">
+
+            <!-- TITLE WITH SVG ICONS -->
+            <div class="title">
+                <svg class="user-icon" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
-                <h2>NEON<span>HUB</span></h2>
+                <h1>LOGIN</h1>
+                <svg class="lock-icon" viewBox="0 0 24 24">
+                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                </svg>
             </div>
 
-            <ul class="nav-links">
-                <li>
-                    <a href="#" class="active">
-                        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                        Users
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-                        Analytics
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                        Settings
-                    </a>
-                </li>
-            </ul>
+            <!-- FORM WRAPPER -->
+            <form id="loginForm" autocomplete="on">
+
+                <!-- USERNAME -->
+                <div class="input-box">
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Username" 
+                        aria-label="Username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="input-box">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Password" 
+                        aria-label="Password"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+                        <svg id="eyeIcon" viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="error-message" id="errorMsg">Tafadhali jaza nafasi zote!</div>
+
+                <!-- SIGN IN BUTTON -->
+                <button type="submit" class="sign-in">
+                    Sign in
+                </button>
+
+            </form>
+
+            <!-- LINKS -->
+            <div class="links">
+                <a href="#">Forgot Password</a>
+                <a href="#">Sign up</a>
+            </div>
+
         </div>
+    </div>
 
-        <a href="index.html" class="logout-btn">
-            Logout
-        </a>
-    </aside>
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginContainer = document.getElementById('loginContainer');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const errorMsg = document.getElementById('errorMsg');
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- HEADER -->
-        <header class="top-header">
-            <div class="search-box">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" placeholder="Search system...">
-            </div>
+        // Toggle show/hide password
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            // Badilisha muonekano wa eye icon
+            if (isPassword) {
+                eyeIcon.style.fill = '#35eaff';
+                togglePassword.setAttribute('aria-label', 'Hide password');
+            } else {
+                eyeIcon.style.fill = '#777983';
+                togglePassword.setAttribute('aria-label', 'Show password');
+            }
+        });
 
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=NeonUser" alt="Avatar">
-                </div>
-            </div>
-        </header>
+        // Form Submission and Validation
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        <!-- STATS -->
-        <section class="stats-grid">
-            <div class="stat-card">
-                <h4>TOTAL USERS</h4>
-                <div class="value">12,450</div>
-            </div>
-            <div class="stat-card pink">
-                <h4>SYSTEM LOAD</h4>
-                <div class="value">34%</div>
-            </div>
-            <div class="stat-card">
-                <h4>REVENUE</h4>
-                <div class="value">$8,920</div>
-            </div>
-        </section>
-
-        <!-- PANELS -->
-        <section class="dashboard-panels">
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>TRAFFIC OVERVIEW</h3>
-                </div>
-                <div class="chart-placeholder">
-                    <div class="bar" style="height: 40%;"></div>
-                    <div class="bar" style="height: 70%;"></div>
-                    <div class="bar" style="height: 55%;"></div>
-                    <div class="bar" style="height: 90%;"></div>
-                    <div class="bar" style="height: 65%;"></div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>RECENT SYSTEM LOGS</h3>
-                </div>
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <span>New Login Detected</span>
-                        <div class="dot"></div>
-                    </li>
-                    <li class="activity-item">
-                        <span>Database Backup</span>
-                        <div class="dot"></div>
-                    </li>
-                    <li class="activity-item">
-                        <span>API Token Refreshed</span>
-                        <div class="dot"></div>
-                    </li>
-                </ul>
-            </div>
-        </section>
-    </main>
+            if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
+                errorMsg.style.display = 'block';
+                loginContainer.classList.add('shake');
+                
+                setTimeout(() => {
+                    loginContainer.classList.remove('shake');
+                }, 400);
+            } else {
+                errorMsg.style.display = 'none';
+                alert('Login imefanikiwa! Karibu ' + usernameInput.value);
+                // Hapa unaweza kuweka code za kupeleka mtumiaji kwenye Dashboard
+                window.location.href = "dashboard.html";
+            }
+        });
+    </script>
 
 </body>
 </html>
