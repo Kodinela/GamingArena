@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kodinela Gaming Arena | Download PC & Android Games</title>
 
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --bg-body: #20232b;
@@ -334,7 +337,7 @@
         }
 
         @media (max-width: 768px) {
-            nav { display: none; } /* Ongeza Mobile Menu baadaye */
+            nav { display: none; }
             .hero h2 { font-size: 28px; }
             .controls-section { flex-direction: column; align-items: stretch; }
             .search-box { width: 100%; }
@@ -370,13 +373,13 @@
         <span class="hero-badge">FEATURED GAME</span>
         <h2>CYBERPUNK 2077</h2>
         <p>Ingia kwenye mji wa siku zijazo wa Night City. Download leo upate uwezo wa kucheza kwa ubora wa 4K.</p>
-        <a href="#" class="btn-main">Download Now (55 GB)</a>
+        <a href="game-details.html?slug=cyberpunk-2077" class="btn-main">Download Now (55 GB)</a>
     </section>
 
     <!-- SEARCH & CATEGORIES -->
     <section class="controls-section">
         <div class="search-box">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 11.99 14 9.5 14z"/></svg>
             <input type="text" placeholder="Tafuta game au accessory...">
         </div>
 
@@ -390,125 +393,63 @@
         </div>
     </section>
 
-    <!-- TRENDING GAMES -->
+    <!-- POPULAR GAMES -->
     <h3 class="section-title">POPULAR GAMES</h3>
-    <section class="games-grid">
-
-        <!-- GAME CARD 1 -->
-        <div class="game-card">
-            <img src="https://picsum.photos/300/180?racing" class="game-img" alt="Need For Speed">
-            <div class="game-info">
-                <span class="platform-tag">PC Game • Racing</span>
-                <h4 class="game-title">Need For Speed Unbound</h4>
-                <div class="game-meta">
-                    <span>Size: 30 GB</span>
-                    <span>★ 4.8</span>
-                </div>
-                <a href="game-details.html" class="card-btn">View & Download</a>
-            </div>
-        </div>
-
-        <!-- GAME CARD 2 -->
-        <div class="game-card">
-            <img src="https://picsum.photos/300/180?action" class="game-img" alt="GTA V">
-            <div class="game-info">
-                <span class="platform-tag">PC Game • Action</span>
-                <h4 class="game-title">GTA V Premium Edition</h4>
-                <div class="game-meta">
-                    <span>Size: 90 GB</span>
-                    <span>★ 4.9</span>
-                </div>
-                <a href="game-details.html" class="card-btn">View & Download</a>
-            </div>
-        </div>
-
-        <!-- GAME CARD 3 -->
-        <div class="game-card">
-            <img src="https://picsum.photos/300/180?mobile" class="game-img" alt="PUBG Mobile">
-            <div class="game-info">
-                <span class="platform-tag">Android • Shooter</span>
-                <h4 class="game-title">PUBG Mobile APK + OBB</h4>
-                <div class="game-meta">
-                    <span>Size: 2.1 GB</span>
-                    <span>★ 4.5</span>
-                </div>
-                <a href="game-details.html" class="card-btn">View & Download</a>
-            </div>
-        </div>
-
-        <!-- ACCESSORY CARD 4 -->
-        <div class="game-card">
-            <img src="https://picsum.photos/300/180?controller" class="game-img" alt="Controller">
-            <div class="game-info">
-                <span class="platform-tag" style="color:var(--neon-pink);">Accessory</span>
-                <h4 class="game-title">Wireless RGB Gamepad</h4>
-                <div class="game-meta">
-                    <span>PC/Android</span>
-                    <span>★ 4.7</span>
-                </div>
-                <a href="#" class="card-btn">View Details</a>
-            </div>
-        </div>
-
+    <section class="games-grid" id="gamesContainer">
+        <!-- Data itajazwa hapa ki-automatic kutoka Supabase -->
+        <p style="color:var(--text-dim); grid-column: 1/-1; text-align: center; padding: 40px;">Inapakua games...</p>
     </section>
 
     <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 Kodinela Gaming Arena. Haki zote zimehifadhiwa.</p>
     </footer>
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-    const SUPABASE_URL = "https://acjomyksibajagsypkm.supabase.co";
-    const SUPABASE_KEY = "PASTE_PUBLISHABLE_KEY_YAKO_HAPA"; // Weka Publishable Key yako hapa
+    <!-- SUPABASE INTEGRATION SCRIPT -->
+    <script>
+        const SUPABASE_URL = "https://acjomyksibajagsypkm.supabase.co";
+        const SUPABASE_KEY = "WEKA_PUBLISHABLE_KEY_YAKO_HAPA"; // Badilisha hii na key yako ya sb_publishable_...
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadGames() {
-        const gamesGrid = document.querySelector('.games-grid');
+        async function fetchGamesFromDatabase() {
+            const container = document.getElementById('gamesContainer');
 
-        // Chukua games zote kutoka Supabase
-        const { data: games, error } = await supabaseClient
-            .from('games')
-            .select('*')
-            .order('created_at', { ascending: false });
+            try {
+                const { data: games, error } = await supabaseClient
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-        if (error) {
-            console.error('Kosa la kuvuta games:', error);
-            return;
-        }
+                if (error) throw error;
 
-        if (games.length === 0) {
-            gamesGrid.innerHTML = '<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>';
-            return;
-        }
+                if (!games || games.length === 0) {
+                    container.innerHTML = '<p style="color:var(--text-dim); grid-column: 1/-1; text-align: center; padding: 40px;">Bado hakuna game iliyopakiwa. Tumia admin.html kuongeza game mpya.</p>';
+                    return;
+                }
 
-        // Safisha cards za zamani na weka zilizo kutoka Database
-        gamesGrid.innerHTML = '';
-
-        games.forEach(game => {
-            const gameCard = `
-                <div class="game-card">
-                    <img src="${game.cover_image || 'https://picsum.photos/300/180?gaming'}" class="game-img" alt="${game.title}">
-                    <div class="game-info">
-                        <span class="platform-tag">${game.category || 'PC / Android'}</span>
-                        <h4 class="game-title">${game.title}</h4>
-                        <div class="game-meta">
-                            <span>Size: ${game.file_size || 'N/A'}</span>
-                            <span>★ 5.0</span>
+                container.innerHTML = games.map(game => `
+                    <div class="game-card">
+                        <img src="${game.cover_image || 'https://picsum.photos/300/180?gaming'}" class="game-img" alt="${game.title}">
+                        <div class="game-info">
+                            <span class="platform-tag">${game.category || 'PC GAME'}</span>
+                            <h4 class="game-title">${game.title}</h4>
+                            <div class="game-meta">
+                                <span>Size: ${game.file_size || 'N/A'}</span>
+                                <span>★ 5.0</span>
+                            </div>
+                            <a href="game-details.html?slug=${game.slug}" class="card-btn">View & Download</a>
                         </div>
-                        <a href="game-details.html?slug=${game.slug}" class="card-btn">View & Download</a>
                     </div>
-                </div>
-            `;
-            gamesGrid.innerHTML += gameCard;
-        });
-    }
+                `).join('');
 
-    // Washa function mara tu ukurasa unapofunguka
-    loadGames();
-</script>
-    
+            } catch (err) {
+                console.error('Kosa wakati wa kuvuta games:', err);
+                container.innerHTML = '<p style="color:var(--neon-pink); grid-column: 1/-1; text-align: center; padding: 40px;">Kosa limetokea wakati wa kupakua data. Angalia API key au internet connection.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGamesFromDatabase);
+    </script>
 </body>
 </html>
