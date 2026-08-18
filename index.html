@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Rotating Square</title>
+
+    <title>Neon Login</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
@@ -17,55 +20,93 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #080b16;
-            overflow: hidden;
+            background: #20232b;
         }
 
-        .box {
+
+        /* =========================
+           LOGIN CONTAINER
+        ========================== */
+
+        .login-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            background: #111827;
-            border-radius: 20px;
+            width: 440px;
+            padding: 55px 55px 40px;
+
+            background: #25262d;
+
+            border-radius: 25px;
+
+            box-shadow:
+                15px 15px 30px rgba(0, 0, 0, 0.35),
+                -10px -10px 25px rgba(255, 255, 255, 0.03);
+
             overflow: hidden;
         }
 
-        .box::before {
+
+        /* =========================
+           NEON ROTATING BORDER
+        ========================== */
+
+        .login-container::before {
+
             content: "";
+
             position: absolute;
-            inset: 50%;
-            width: 170cqmax;
-            height: 170cqmax;
-            translate: -50% -50%;
+
+            inset: -50%;
 
             background: conic-gradient(
                 from 0deg,
+
                 transparent 0deg 36deg,
+
                 #35eaff 36deg 48deg,
+
                 transparent 48deg 126deg,
+
                 #ff0a6c 126deg 138deg,
+
                 transparent 138deg 216deg,
+
                 #35eaff 216deg 228deg,
+
                 transparent 228deg 306deg,
+
                 #ff0a6c 306deg 318deg,
+
                 transparent 318deg 360deg
             );
 
-            filter: blur(1px) drop-shadow(0 0 12px #35eaff);
-
             animation: neon-rotate 5s linear infinite;
+
+            filter:
+                blur(2px)
+                drop-shadow(0 0 12px #35eaff);
         }
 
-        .box::after {
+
+        /* Inner layer */
+
+        .login-container::after {
+
             content: "";
+
             position: absolute;
+
             inset: 4px;
-            background: #111827;
-            border-radius: 17px;
-            z-index: 1;
+
+            background: #25262d;
+
+            border-radius: 21px;
+
+            z-index: 0;
         }
+
 
         @keyframes neon-rotate {
+
             from {
                 transform: rotate(0deg);
             }
@@ -73,13 +114,349 @@
             to {
                 transform: rotate(360deg);
             }
+
         }
+
+
+        /* =========================
+           LOGIN CONTENT
+        ========================== */
+
+        .login-content {
+
+            position: relative;
+
+            z-index: 2;
+
+        }
+
+
+        /* =========================
+           TITLE
+        ========================== */
+
+        .title {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .title h1 {
+
+            color: #eeeeee;
+
+            font-size: 28px;
+
+            letter-spacing: 7px;
+
+            font-weight: 700;
+
+        }
+
+
+        .title .user-icon {
+
+            color: #ff0a6c;
+
+            font-size: 25px;
+
+        }
+
+
+        .title .lock-icon {
+
+            color: #35eaff;
+
+            font-size: 25px;
+
+        }
+
+
+        /* =========================
+           INPUT BOX
+        ========================== */
+
+        .input-box {
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .input-box input {
+
+            width: 100%;
+
+            height: 58px;
+
+            border: none;
+
+            outline: none;
+
+            border-radius: 30px;
+
+            padding: 0 25px;
+
+            background: #202127;
+
+            color: white;
+
+            font-size: 16px;
+
+            box-shadow:
+                inset 5px 5px 10px rgba(0, 0, 0, 0.3),
+                inset -3px -3px 8px rgba(255, 255, 255, 0.02);
+
+            transition: 0.3s;
+
+        }
+
+
+        .input-box input::placeholder {
+
+            color: #777983;
+
+            font-weight: 600;
+
+        }
+
+
+        .input-box input:focus {
+
+            box-shadow:
+                0 0 8px rgba(53, 234, 255, 0.35),
+                inset 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+        }
+
+
+        /* =========================
+           SIGN IN BUTTON
+        ========================== */
+
+        .sign-in {
+
+            width: 100%;
+
+            height: 60px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #35d0e3;
+
+            color: #172127;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+
+            box-shadow:
+                0 0 15px rgba(53, 234, 255, 0.45);
+
+            transition: 0.3s;
+
+        }
+
+
+        .sign-in:hover {
+
+            transform: translateY(-2px);
+
+            background: #35eaff;
+
+            box-shadow:
+                0 0 25px rgba(53, 234, 255, 0.75);
+
+        }
+
+
+        .sign-in:active {
+
+            transform: scale(0.98);
+
+        }
+
+
+        /* =========================
+           BOTTOM LINKS
+        ========================== */
+
+        .links {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-top: 28px;
+
+            padding: 0 15px;
+
+        }
+
+
+        .links a {
+
+            text-decoration: none;
+
+            color: #eeeeee;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+
+        }
+
+
+        .links a:first-child:hover {
+
+            color: #35eaff;
+
+        }
+
+
+        .links a:last-child {
+
+            color: #ff0a6c;
+
+        }
+
+
+        .links a:last-child:hover {
+
+            color: #ff4c91;
+
+            text-shadow:
+                0 0 10px #ff0a6c;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 500px) {
+
+            .login-container {
+
+                width: 90%;
+
+                padding: 45px 30px 35px;
+
+            }
+
+
+            .title h1 {
+
+                font-size: 23px;
+
+            }
+
+
+            .links {
+
+                padding: 0 5px;
+
+            }
+
+        }
+
     </style>
 </head>
 
+
 <body>
 
-    <div class="box"></div>
+
+    <div class="login-container">
+
+        <div class="login-content">
+
+
+            <!-- TITLE -->
+
+            <div class="title">
+
+                <span class="user-icon">◉</span>
+
+                <h1>LOGIN</h1>
+
+                <span class="lock-icon">🔒</span>
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="input-box">
+
+                <input
+                    type="text"
+                    placeholder="Username"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="input-box">
+
+                <input
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <!-- SIGN IN -->
+
+            <button class="sign-in">
+
+                Sign in
+
+            </button>
+
+
+            <!-- LINKS -->
+
+            <div class="links">
+
+                <a href="#">
+                    Forgot Password
+                </a>
+
+                <a href="#">
+                    Sign up
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
 
 </body>
 </html>
