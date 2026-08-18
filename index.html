@@ -407,8 +407,8 @@
 
     <!-- SUPABASE INTEGRATION SCRIPT -->
     <script>
-        const SUPABASE_URL = "https://acjomyksibajagsypkm.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z"; // Badilisha hii na key yako ya sb_publishable_...
+        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -445,7 +445,7 @@
 
             } catch (err) {
                 console.error('Kosa wakati wa kuvuta games:', err);
-                container.innerHTML = '<p style="color:var(--neon-pink); grid-column: 1/-1; text-align: center; padding: 40px;">Kosa limetokea wakati wa kupakua data. Angalia API key au internet connection.</p>';
+                container.innerHTML = '<p style="color:var(--neon-pink); grid-column: 1/-1; text-align: center; padding: 40px;">Kosa limetokea wakati wa kupakua data. Jaribu kurefresh ukurasa.</p>';
             }
         }
 
