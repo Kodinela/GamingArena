@@ -456,6 +456,59 @@
     <footer>
         <p>&copy; 2026 Kodinela Gaming Arena. Haki zote zimehifadhiwa.</p>
     </footer>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+    const SUPABASE_URL = "https://acjomyksibajagsypkm.supabase.co";
+    const SUPABASE_KEY = "PASTE_PUBLISHABLE_KEY_YAKO_HAPA"; // Weka Publishable Key yako hapa
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadGames() {
+        const gamesGrid = document.querySelector('.games-grid');
+
+        // Chukua games zote kutoka Supabase
+        const { data: games, error } = await supabaseClient
+            .from('games')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Kosa la kuvuta games:', error);
+            return;
+        }
+
+        if (games.length === 0) {
+            gamesGrid.innerHTML = '<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>';
+            return;
+        }
+
+        // Safisha cards za zamani na weka zilizo kutoka Database
+        gamesGrid.innerHTML = '';
+
+        games.forEach(game => {
+            const gameCard = `
+                <div class="game-card">
+                    <img src="${game.cover_image || 'https://picsum.photos/300/180?gaming'}" class="game-img" alt="${game.title}">
+                    <div class="game-info">
+                        <span class="platform-tag">${game.category || 'PC / Android'}</span>
+                        <h4 class="game-title">${game.title}</h4>
+                        <div class="game-meta">
+                            <span>Size: ${game.file_size || 'N/A'}</span>
+                            <span>★ 5.0</span>
+                        </div>
+                        <a href="game-details.html?slug=${game.slug}" class="card-btn">View & Download</a>
+                    </div>
+                </div>
+            `;
+            gamesGrid.innerHTML += gameCard;
+        });
+    }
+
+    // Washa function mara tu ukurasa unapofunguka
+    loadGames();
+</script>
+    
 </body>
 </html>
