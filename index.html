@@ -1,13 +1,85 @@
-html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Rotating Square</title>
 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #080b16;
+            overflow: hidden;
+        }
 
+        .box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background: #111827;
+            border-radius: 20px;
+            overflow: hidden;
+        }
 
+        .box::before {
+            content: "";
+            position: absolute;
+            inset: 50%;
+            width: 170cqmax;
+            height: 170cqmax;
+            translate: -50% -50%;
 
-Rotating Gradient
-<br> /* Container for the animated gradient */<br> .box {<br> position: relative;<br> width: 200px; /* Adjust size as needed */<br> height: 200px; /* Adjust size as needed */<br> animation: spin 5s linear infinite;<br> }<br><br> .box:before {<br> content: '';<br> position: absolute;<br> inset: 50%;<br> width: 170vmax;<br> height: 170vmax;<br> translate: -50% -50%;<br> background: conic-gradient(<br> from 0deg,<br> transparent 0deg 36deg,<br> #35eaff 36deg 40deg,<br> transparent 40deg 126deg,<br> #ff6a6c 126deg 130deg,<br> transparent 130deg 216deg,<br> #35eaff 216deg 220deg,<br> transparent 220deg 318deg,<br> #ff6a6c 318deg 360deg,<br> transparent 360deg 360deg<br> );<br> filter: blur(1px) drop-shadow(0 0 12px #35eaff);<br> animation: neon-rotate 5s linear infinite;<br> }<br><br> @keyframes neon-rotate {<br> 0% { transform: rotate(0deg); }<br> 100% { transform: rotate(360deg); }<br> }<br> 
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg 36deg,
+                #35eaff 36deg 48deg,
+                transparent 48deg 126deg,
+                #ff0a6c 126deg 138deg,
+                transparent 138deg 216deg,
+                #35eaff 216deg 228deg,
+                transparent 228deg 306deg,
+                #ff0a6c 306deg 318deg,
+                transparent 318deg 360deg
+            );
 
+            filter: blur(1px) drop-shadow(0 0 12px #35eaff);
 
+            animation: neon-rotate 5s linear infinite;
+        }
 
+        .box::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: #111827;
+            border-radius: 17px;
+            z-index: 1;
+        }
 
+        @keyframes neon-rotate {
+            from {
+                transform: rotate(0deg);
+            }
 
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box"></div>
+
+</body>
+</html>
