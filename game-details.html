@@ -76,55 +76,86 @@
         <p style="text-align: center; color: var(--text-dim);">Inapakua maelezo ya game...</p>
     </main>
 
-    <script>
-        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
+<!-- SUPABASE INTEGRATION WITH AUTH CHECK -->
+<script>
+    const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Chukua 'slug' kutoka kwenye URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameSlug = urlParams.get('slug');
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawSlug = urlParams.get('slug');
 
-        async function fetchGameDetails() {
-            const container = document.getElementById('detailsContainer');
+    async function fetchGameDetails() {
+        const container = document.getElementById('detailsContainer');
 
-            if (!gameSlug) {
-                container.innerHTML = `<div class="error-msg">⚠️ Hakuna game iliyochaguliwa.</div>`;
+        if (!rawSlug) {
+            container.innerHTML = `<div class="error-msg">⚠️ Hakuna game iliyochaguliwa.</div>`;
+            return;
+        }
+
+        const cleanSlug = rawSlug.trim();
+
+        try {
+            // 1. Angalia kama mtumiaji ameingia (Is logged in?)
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            // 2. Chukua taarifa za game kutoka database
+            const { data: games, error } = await supabaseClient
+                .from('games')
+                .select('*')
+                .ilike('slug', cleanSlug);
+
+            if (error) throw error;
+
+            if (!games || games.length === 0) {
+                container.innerHTML = `<div class="error-msg">❌ Game haijapatikana.</div>`;
                 return;
             }
 
-            try {
-                // Tafuta game inayofanana na slug husika
-                const { data: game, error } = await supabaseClient
-                    .from('games')
-                    .select('*')
-                    .eq('slug', gameSlug)
-                    .single();
+            const game = games[0];
 
-                if (error || !game) {
-                    container.innerHTML = `<div class="error-msg">❌ Game haijapatikana.</div>`;
-                    return;
-                }
+            // 3. Tengeneza kitufe kulingana na hali ya Login
+            let downloadArea = "";
 
-                container.innerHTML = `
-                    <img src="${game.cover_image || 'https://picsum.photos/800/400?gaming'}" class="game-banner" alt="${game.title}">
-                    <h1 class="title">${game.title}</h1>
-                    <div class="meta">
-                        <span>Aina: ${game.category || 'PC / Android'}</span>
-                        <span>Ukubwa: ${game.file_size || 'N/A'}</span>
-                    </div>
-                    <div class="description">${game.description || 'Hakuna maelezo yaliyowekwa.'}</div>
-                    <a href="${game.download_url || '#'}" class="download-btn" target="_blank">Download Game</a>
+            if (session) {
+                // Kama amelogin: Onyesha kitufe cha Download
+                downloadArea = `
+                    <a href="${game.download_url || '#'}" class="download-btn" target="_blank">
+                        🚀 Download Game
+                    </a>
                 `;
-
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = `<div class="error-msg">⚠️ Kosa limetokea wakati wa kupakua data.</div>`;
+            } else {
+                // Kama HAJALOGIN: Muelekeze Login kwanza
+                downloadArea = `
+                    <div style="background: rgba(255, 10, 108, 0.1); padding: 20px; border-radius: 15px; border: 1px solid var(--neon-pink); text-align: center;">
+                        <p style="color: #fff; margin-bottom: 12px; font-weight: bold;">Unatakiwa uwe umeingia kwenye akunti yako ili kupakua game hii.</p>
+                        <a href="login.html" class="download-btn" style="background: var(--neon-pink); color: white;">
+                            🔑 Ingia (Login) Kupakua
+                        </a>
+                    </div>
+                `;
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', fetchGameDetails);
-    </script>
+            // Render data kwenye ukurasa
+            container.innerHTML = `
+                <img src="${game.cover_image || 'https://picsum.photos/800/400?gaming'}" class="game-banner" alt="${game.title}">
+                <h1 class="title">${game.title}</h1>
+                <div class="meta">
+                    <span>Aina: ${game.category || 'PC / Android'}</span>
+                    <span>Ukubwa: ${game.file_size || 'N/A'}</span>
+                </div>
+                <div class="description">${game.description || 'Hakuna maelezo yaliyowekwa.'}</div>
+                ${downloadArea}
+            `;
+
+        } catch (err) {
+            console.error('Kosa:', err);
+            container.innerHTML = `<div class="error-msg">⚠️ Imeshindikana kuunganisha na Database.</div>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchGameDetails);
+</script>    
 </body>
 </html>
