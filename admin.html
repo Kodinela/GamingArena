@@ -203,102 +203,137 @@
         </div>
     </div>
 
-    <script>
-        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
+  <script>
+    const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const uploadForm = document.getElementById('uploadForm');
-        const statusBox = document.getElementById('statusBox');
-        const gamesList = document.getElementById('gamesList');
-        const totalGamesCount = document.getElementById('totalGamesCount');
+    const uploadForm = document.getElementById('uploadForm');
+    const statusBox = document.getElementById('statusBox');
+    const gamesList = document.getElementById('gamesList');
+    const totalGamesCount = document.getElementById('totalGamesCount');
 
-        // 1. VUTA NA ONYESHA MAGAME YOTE
-        async function loadGames() {
-            try {
-                const { data: games, error } = await supabaseClient
-                    .from('games')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+    // 1. ANGALIA KAMA AMELOGIN KAMA ADMIN
+    async function checkAdminAuth() {
+        const { data: { session } } = await supabaseClient.auth.getSession();
 
-                if (error) throw error;
+        // Kama hajajaza email na password kule login.html, mrudishe login mara moja
+        if (!session) {
+            window.location.href = "login.html";
+            return false;
+        }
 
-                totalGamesCount.innerText = games ? games.length : 0;
+        // (Hiari) Kama unataka kuruhusu email MOJA TU maalum kuwa Admin:
+        /*
+        if (session.user.email !== "admin@kodinela.com") {
+            alert("Akaunti hii haina ruhusa ya Admin!");
+            await supabaseClient.auth.signOut();
+            window.location.href = "login.html";
+            return false;
+        }
+        */
 
-                if (!games || games.length === 0) {
-                    gamesList.innerHTML = `<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>`;
-                    return;
-                }
+        return true;
+    }
 
-                gamesList.innerHTML = games.map(g => `
-                    <div class="game-item">
-                        <img src="${g.cover_image || 'https://picsum.photos/100'}" alt="${g.title}">
-                        <div class="game-info">
-                            <h5>${g.title}</h5>
-                            <p>${g.category || 'PC Game'} • ${g.file_size || 'N/A'}</p>
-                        </div>
-                        <button class="delete-btn" onclick="deleteGame('${g.id}')">Delete</button>
+    // 2. VUTA NA ONYESHA MAGAME YOTE
+    async function loadGames() {
+        try {
+            const { data: games, error } = await supabaseClient
+                .from('games')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            totalGamesCount.innerText = games ? games.length : 0;
+
+            if (!games || games.length === 0) {
+                gamesList.innerHTML = `<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>`;
+                return;
+            }
+
+            gamesList.innerHTML = games.map(g => `
+                <div class="game-item">
+                    <img src="${g.cover_image || 'https://picsum.photos/100'}" alt="${g.title}">
+                    <div class="game-info">
+                        <h5>${g.title}</h5>
+                        <p>${g.category || 'PC Game'} • ${g.file_size || 'N/A'}</p>
                     </div>
-                `).join('');
+                    <button class="delete-btn" onclick="deleteGame('${g.id}')">Delete</button>
+                </div>
+            `).join('');
 
-            } catch (err) {
-                console.error(err);
-                gamesList.innerHTML = `<p style="color:var(--neon-pink);">Imeshindikana kupakua magame.</p>`;
-            }
+        } catch (err) {
+            console.error(err);
+            gamesList.innerHTML = `<p style="color:var(--neon-pink);">Imeshindikana kupakua magame.</p>`;
         }
+    }
 
-        // 2. UPLOAD GAME MPYA
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Inapakia...";
-            submitBtn.disabled = true;
+    // 3. UPLOAD GAME MPYA
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerText = "Inapakia...";
+        submitBtn.disabled = true;
 
-            const gameData = {
-                title: document.getElementById('title').value.trim(),
-                slug: document.getElementById('slug').value.trim().toLowerCase(),
-                category: document.getElementById('category').value,
-                file_size: document.getElementById('file_size').value.trim(),
-                cover_image: document.getElementById('cover_image').value.trim(),
-                download_url: document.getElementById('download_url').value.trim(),
-                description: document.getElementById('description').value.trim()
-            };
+        const gameData = {
+            title: document.getElementById('title').value.trim(),
+            slug: document.getElementById('slug').value.trim().toLowerCase(),
+            category: document.getElementById('category').value,
+            file_size: document.getElementById('file_size').value.trim(),
+            cover_image: document.getElementById('cover_image').value.trim(),
+            download_url: document.getElementById('download_url').value.trim(),
+            description: document.getElementById('description').value.trim()
+        };
 
-            try {
-                const { error } = await supabaseClient.from('games').insert([gameData]);
-                if (error) throw error;
+        try {
+            const { error } = await supabaseClient.from('games').insert([gameData]);
+            if (error) throw error;
 
-                statusBox.className = 'status success';
-                statusBox.innerText = '✅ Game imepakiwa kwa mafanikio!';
-                statusBox.style.display = 'block';
-                uploadForm.reset();
-                loadGames(); // Refresh orodha
-            } catch (err) {
-                statusBox.className = 'status error';
-                statusBox.innerText = '❌ Kosa: ' + err.message;
-                statusBox.style.display = 'block';
-            } finally {
-                submitBtn.innerText = "🚀 Publish Game";
-                submitBtn.disabled = false;
-            }
-        });
-
-        // 3. FUTA GAME
-        async function deleteGame(id) {
-            if (!confirm("Unahakika unataka kufuta game hii?")) return;
-
-            try {
-                const { error } = await supabaseClient.from('games').delete().eq('id', id);
-                if (error) throw error;
-                loadGames();
-            } catch (err) {
-                alert("Kosa wakati wa kufuta: " + err.message);
-            }
+            statusBox.className = 'status success';
+            statusBox.innerText = '✅ Game imepakiwa kwa mafanikio!';
+            statusBox.style.display = 'block';
+            uploadForm.reset();
+            loadGames();
+        } catch (err) {
+            statusBox.className = 'status error';
+            statusBox.innerText = '❌ Kosa: ' + err.message;
+            statusBox.style.display = 'block';
+        } finally {
+            submitBtn.innerText = "🚀 Publish Game";
+            submitBtn.disabled = false;
         }
+    });
 
-        document.addEventListener('DOMContentLoaded', loadGames);
-    </script>
+    // 4. FUTA GAME
+    async function deleteGame(id) {
+        if (!confirm("Unahakika unataka kufuta game hii?")) return;
+
+        try {
+            const { error } = await supabaseClient.from('games').delete().eq('id', id);
+            if (error) throw error;
+            loadGames();
+        } catch (err) {
+            alert("Kosa wakati wa kufuta: " + err.message);
+        }
+    }
+
+    // 5. FUNCTION YA LOGOUT
+    async function logoutAdmin() {
+        await supabaseClient.auth.signOut();
+        window.location.href = "login.html";
+    }
+
+    // ANZA KUKAGUA RUHUSA MARA UKURASA UNAPOFUNGUKA
+    document.addEventListener('DOMContentLoaded', async () => {
+        const isAllowed = await checkAdminAuth();
+        if (isAllowed) {
+            loadGames();
+        }
+    });
+</script>  
 </body>
 </html>
