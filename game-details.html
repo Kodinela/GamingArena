@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk 2077 - Download | Kodinela Gaming Arena</title>
+
+    <style>
+        :root {
+            --bg-body: #20232b;
+            --bg-card: #25262d;
+            --bg-input: #202127;
+            --neon-cyan: #35eaff;
+            --neon-pink: #ff0a6c;
+            --text-main: #eeeeee;
+            --text-dim: #777983;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           HEADER / NAVBAR
+        ========================== */
+        header {
+            background: var(--bg-card);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--neon-cyan);
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: var(--text-main);
+        }
+
+        .brand h1 span {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .login-nav-btn {
+            padding: 8px 22px;
+            border-radius: 20px;
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--text-main);
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 10, 108, 0.3);
+        }
+
+        .login-nav-btn:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .breadcrumb a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+        }
+
+        /* =========================
+           GAME HERO BANNER
+        ========================== */
+        .game-hero {
+            background: var(--bg-card);
+            border-radius: 25px;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 35px;
+        }
+
+        .game-cover {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(53, 234, 255, 0.2);
+        }
+
+        .game-details-header h2 {
+            font-size: 36px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--bg-input);
+            color: var(--neon-cyan);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(53, 234, 255, 0.2);
+        }
+
+        .quick-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            background: var(--bg-input);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .spec-item {
+            font-size: 14px;
+        }
+
+        .spec-item span {
+            color: var(--text-dim);
+            display: block;
+            font-size: 12px;
+        }
+
+        .main-download-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            text-align: center;
+            background: var(--neon-cyan);
+            color: #172127;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(53, 234, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .main-download-btn:hover {
+            box-shadow: 0 0 30px var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           SECTIONS & LAYOUT
+        ========================== */
+        .section-box {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .section-box h3 {
+            font-size: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 12px;
+        }
+
+        /* SCREENSHOTS GALLERY */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.03);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(53, 234, 255, 0.3);
+        }
+
+        /* SYSTEM REQUIREMENTS */
+        .req-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .req-card {
+            background: var(--bg-input);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .req-card h4 {
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .req-list {
+            list-style: none;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .req-list li strong {
+            color: var(--text-dim);
+        }
+
+        /* DOWNLOAD LINKS BOX */
+        .download-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .link-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-input);
+            padding: 15px 20px;
+            border-radius: 12px;
+        }
+
+        .link-info h5 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .link-info p {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .btn-mirror {
+            padding: 8px 20px;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .btn-mirror:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 12px var(--neon-pink);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-card);
+            padding: 30px 5%;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 850px) {
+            .game-hero { grid-template-columns: 1fr; }
+            .req-grid { grid-template-columns: 1fr; }
+            .link-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="brand">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <h1>KODINELA<span>ARENA</span></h1>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#" class="active">Games</a></li>
+                <li><a href="#">Accessories</a></li>
+            </ul>
+        </nav>
+        <a href="login.html" class="login-nav-btn">Login</a>
+    </header>
+
+    <div class="container">
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / <a href="#">PC Games</a> / Cyberpunk 2077
+        </div>
+
+        <!-- GAME HERO BANNER -->
+        <div class="game-hero">
+            <img src="https://picsum.photos/400/500?cyberpunk" class="game-cover" alt="Cyberpunk 2077 Cover">
+            
+            <div class="game-details-header">
+                <h2>Cyberpunk 2077</h2>
+                
+                <div class="tags">
+                    <span class="tag">PC GAME</span>
+                    <span class="tag">ACTION</span>
+                    <span class="tag">OPEN WORLD</span>
+                    <span class="tag">RPG</span>
+                </div>
+
+                <div class="quick-specs">
+                    <div class="spec-item">
+                        <span>FILE SIZE</span>
+                        <strong>55.4 GB</strong>
+                    </div>
+                    <div class="spec-item">
+                        <span>VERSION</span>
+                        <strong>v2.12 (Latest)</strong>
+                    </div>
+                    <div class="spec-item">
+                        <span>DEVELOPER</span>
+                        <strong>CD Projekt Red</strong>
+                    </div>
+                    <div class="spec-item">
+                        <span>CRACK STATUS</span>
+                        <strong>Repack / Pre-installed</strong>
+                    </div>
+                </div>
+
+                <a href="#download-section" class="main-download-btn">⬇ Download Game Now</a>
+            </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="section-box">
+            <h3>GAME OVERVIEW</h3>
+            <p>
+                Cyberpunk 2077 ni mchezo wa Action-Adventure RPG uliowekwa katika mji wa siku zijazo aitwaye Night City. Mtumiaji anacheza kama V, mercenary anayesaka implant ya kipekee inayoweza kumpa uwezo wa kuishi milele. 
+            </p>
+            <p style="margin-top: 10px;">
+                Toleo hili linajumuisha updates zote za hivi karibuni, pamoja na Phantom Liberty expansion pack. Furahia picha zenye ubora wa hali ya juu (Ray Tracing & DLSS support) kwenye PC yako!
+            </p>
+        </div>
+
+        <!-- SCREENSHOTS GALLERY -->
+        <div class="section-box">
+            <h3>SCREENSHOTS</h3>
+            <div class="gallery-grid">
+                <img src="https://picsum.photos/500/300?game1" alt="Screenshot 1">
+                <img src="https://picsum.photos/500/300?game2" alt="Screenshot 2">
+                <img src="https://picsum.photos/500/300?game3" alt="Screenshot 3">
+                <img src="https://picsum.photos/500/300?game4" alt="Screenshot 4">
+            </div>
+        </div>
+
+        <!-- SYSTEM REQUIREMENTS -->
+        <div class="section-box">
+            <h3>SYSTEM REQUIREMENTS</h3>
+            <div class="req-grid">
+
+                <!-- MINIMUM -->
+                <div class="req-card">
+                    <h4>MINIMUM SPECS</h4>
+                    <ul class="req-list">
+                        <li><strong>OS:</strong> Windows 10 (64-bit)</li>
+                        <li><strong>CPU:</strong> Intel Core i7-6700 / AMD Ryzen 5 1600</li>
+                        <li><strong>RAM:</strong> 12 GB RAM</li>
+                        <li><strong>GPU:</strong> NVIDIA GTX 1060 (6GB) / AMD RX 580</li>
+                        <li><strong>Storage:</strong> 70 GB SSD Space</li>
+                    </ul>
+                </div>
+
+                <!-- RECOMMENDED -->
+                <div class="req-card">
+                    <h4>RECOMMENDED SPECS</h4>
+                    <ul class="req-list">
+                        <li><strong>OS:</strong> Windows 11 (64-bit)</li>
+                        <li><strong>CPU:</strong> Intel Core i7-12700 / AMD Ryzen 7 7800X3D</li>
+                        <li><strong>RAM:</strong> 16 GB RAM</li>
+                        <li><strong>GPU:</strong> NVIDIA RTX 3070 (8GB) / RX 6800 XT</li>
+                        <li><strong>Storage:</strong> 70 GB NVMe SSD</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- DOWNLOAD LINKS -->
+        <div class="section-box" id="download-section">
+            <h3>DOWNLOAD LINKS</h3>
+            <div class="download-options">
+
+                <div class="link-row">
+                    <div class="link-info">
+                        <h5>Direct High-Speed Server (Single Link)</h5>
+                        <p>55.4 GB • Direct ISO / Repack</p>
+                    </div>
+                    <a href="#" class="btn-mirror">Download (Server 1)</a>
+                </div>
+
+                <div class="link-row">
+                    <div class="link-info">
+                        <h5>Google Drive / Mega Mirror</h5>
+                        <p>Part Links (5 GB Each Parts)</p>
+                    </div>
+                    <a href="#" class="btn-mirror">Download Parts</a>
+                </div>
+
+                <div class="link-row">
+                    <div class="link-info">
+                        <h5>Torrent Magnet Link</h5>
+                        <p>P2P Fast Download</p>
+                    </div>
+                    <a href="#" class="btn-mirror">Get Magnet</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Kodinela Gaming Arena. Haki zote zimehifadhiwa.</p>
+    </footer>
+
+</body>
+</html>
