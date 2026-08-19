@@ -3,381 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Login</title>
-
+    <title>Login | Kodinela Gaming Arena</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #20232b;
-        }
-
-        /* =========================
-           LOGIN CONTAINER
-        ========================== */
-        .login-container {
-            position: relative;
-            width: 440px;
-            padding: 55px 45px 40px;
-            background: #25262d;
-            border-radius: 25px;
-            box-shadow:
-                15px 15px 30px rgba(0, 0, 0, 0.35),
-                -10px -10px 25px rgba(255, 255, 255, 0.03);
-            overflow: hidden;
-        }
-
-        /* Shake animation endapo mtumiaji ataacha wazi */
-        .login-container.shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-
-        /* =========================
-           NEON ROTATING BORDER
-        ========================== */
-        .login-container::before {
-            content: "";
-            position: absolute;
-            inset: -50%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0deg 36deg,
-                #35eaff 36deg 48deg,
-                transparent 48deg 126deg,
-                #ff0a6c 126deg 138deg,
-                transparent 138deg 216deg,
-                #35eaff 216deg 228deg,
-                transparent 228deg 306deg,
-                #ff0a6c 306deg 318deg,
-                transparent 318deg 360deg
-            );
-            animation: neon-rotate 5s linear infinite;
-            filter: blur(2px) drop-shadow(0 0 12px #35eaff);
-            will-change: transform; /* Inalainisha animation kwenye simu na PC */
-        }
-
-        .login-container::after {
-            content: "";
-            position: absolute;
-            inset: 4px;
-            background: #25262d;
-            border-radius: 21px;
-            z-index: 0;
-        }
-
-        @keyframes neon-rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* =========================
-           LOGIN CONTENT
-        ========================== */
-        .login-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* =========================
-           TITLE
-        ========================== */
-        .title {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .title h1 {
-            color: #eeeeee;
-            font-size: 28px;
-            letter-spacing: 7px;
-            font-weight: 700;
-        }
-
-        .title svg {
-            width: 26px;
-            height: 26px;
-        }
-
-        .title .user-icon {
-            fill: #ff0a6c;
-            filter: drop-shadow(0 0 6px #ff0a6c);
-        }
-
-        .title .lock-icon {
-            fill: #35eaff;
-            filter: drop-shadow(0 0 6px #35eaff);
-        }
-
-        /* =========================
-           INPUT BOX & TOGGLE
-        ========================== */
-        .input-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 58px;
-            border: 1px solid transparent;
-            outline: none;
-            border-radius: 30px;
-            padding: 0 50px 0 25px;
-            background: #202127;
-            color: white;
-            font-size: 16px;
-            box-shadow:
-                inset 5px 5px 10px rgba(0, 0, 0, 0.3),
-                inset -3px -3px 8px rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-        }
-
-        .input-box input::placeholder {
-            color: #777983;
-            font-weight: 600;
-        }
-
-        .input-box input:focus {
-            border-color: rgba(53, 234, 255, 0.5);
-            box-shadow:
-                0 0 10px rgba(53, 234, 255, 0.35),
-                inset 5px 5px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Custom toggle password button */
-        .toggle-password {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toggle-password svg {
-            width: 20px;
-            height: 20px;
-            fill: #777983;
-            transition: 0.3s;
-        }
-
-        .toggle-password:hover svg {
-            fill: #35eaff;
-        }
-
-        .error-message {
-            color: #ff0a6c;
-            font-size: 13px;
-            margin: -12px 0 15px 15px;
-            display: none;
-        }
-
-        /* =========================
-           SIGN IN BUTTON
-        ========================== */
-        .sign-in {
-            width: 100%;
-            height: 58px;
-            border: none;
-            border-radius: 30px;
-            background: #35d0e3;
-            color: #172127;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 5px;
-            box-shadow: 0 0 15px rgba(53, 234, 255, 0.45);
-            transition: 0.3s;
-        }
-
-        .sign-in:hover {
-            transform: translateY(-2px);
-            background: #35eaff;
-            box-shadow: 0 0 25px rgba(53, 234, 255, 0.75);
-        }
-
-        .sign-in:active {
-            transform: scale(0.98);
-        }
-
-        /* =========================
-           BOTTOM LINKS
-        ========================== */
-        .links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            padding: 0 10px;
-        }
-
-        .links a {
-            text-decoration: none;
-            color: #eeeeee;
-            font-size: 15px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .links a:first-child:hover {
-            color: #35eaff;
-        }
-
-        .links a:last-child {
-            color: #ff0a6c;
-        }
-
-        .links a:last-child:hover {
-            color: #ff4c91;
-            text-shadow: 0 0 10px #ff0a6c;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 500px) {
-            .login-container {
-                width: 90%;
-                padding: 45px 25px 35px;
-            }
-
-            .title h1 {
-                font-size: 22px;
-                letter-spacing: 5px;
-            }
-        }
+        :root { --bg-body: #14161d; --bg-card: #1f222d; --neon-cyan: #35eaff; --neon-pink: #ff0a6c; --text-main: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-card { background: var(--bg-card); padding: 40px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(53, 234, 255, 0.2); }
+        .login-card h2 { text-align: center; margin-bottom: 20px; color: var(--neon-cyan); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #aaa; }
+        .form-group input { width: 100%; padding: 12px; background: #171922; border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 10px; outline: none; }
+        button { width: 100%; padding: 14px; background: var(--neon-cyan); border: none; color: #12141a; font-weight: bold; border-radius: 10px; cursor: pointer; }
+        button:hover { background: var(--neon-pink); color: #fff; }
+        .error-msg { color: var(--neon-pink); font-size: 14px; text-align: center; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="login-container" id="loginContainer">
-        <div class="login-content">
-
-            <!-- TITLE WITH SVG ICONS -->
-            <div class="title">
-                <svg class="user-icon" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                <h1>LOGIN</h1>
-                <svg class="lock-icon" viewBox="0 0 24 24">
-                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                </svg>
+    <div class="login-card">
+        <h2>🔑 INGIA (LOGIN)</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Barua Pepe (Email)</label>
+                <input type="email" id="email" required placeholder="email@example.com">
             </div>
-
-            <!-- FORM WRAPPER -->
-            <form id="loginForm" autocomplete="on">
-
-                <!-- USERNAME -->
-                <div class="input-box">
-                    <input 
-                        type="text" 
-                        id="username" 
-                        placeholder="Username" 
-                        aria-label="Username"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
-
-                <!-- PASSWORD -->
-                <div class="input-box">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        placeholder="Password" 
-                        aria-label="Password"
-                        autocomplete="current-password"
-                        required
-                    >
-                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
-                        <svg id="eyeIcon" viewBox="0 0 24 24">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="error-message" id="errorMsg">Tafadhali jaza nafasi zote!</div>
-
-                <!-- SIGN IN BUTTON -->
-                <button type="submit" class="sign-in">
-                    Sign in
-                </button>
-
-            </form>
-
-            <!-- LINKS -->
-            <div class="links">
-                <a href="#">Forgot Password</a>
-                <a href="#">Sign up</a>
+            <div class="form-group">
+                <label>Nenosiri (Password)</label>
+                <input type="password" id="password" required placeholder="••••••••">
             </div>
-
-        </div>
+            <button type="submit" id="loginBtn">Ingia Akunti</button>
+            <div id="errorMsg" class="error-msg"></div>
+        </form>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const loginContainer = document.getElementById('loginContainer');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const togglePassword = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const errorMsg = document.getElementById('errorMsg');
+        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Toggle show/hide password
-        togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            
-            // Badilisha muonekano wa eye icon
-            if (isPassword) {
-                eyeIcon.style.fill = '#35eaff';
-                togglePassword.setAttribute('aria-label', 'Hide password');
-            } else {
-                eyeIcon.style.fill = '#777983';
-                togglePassword.setAttribute('aria-label', 'Show password');
-            }
-        });
+        // BADILISHA EMAIL HII IWE EMAIL YAKO YA ADMIN
+        const ADMIN_EMAIL = "admin@kodinela.com"; 
 
-        // Form Submission and Validation
-        loginForm.addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
 
-            if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                // Kama ni admin elekeza admin.html, kama ni user wa kawaida elekeza dashboard.html
+                if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    window.location.href = "admin.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            } catch (err) {
+                errorMsg.innerText = "❌ Login Imefeli: " + err.message;
                 errorMsg.style.display = 'block';
-                loginContainer.classList.add('shake');
-                
-                setTimeout(() => {
-                    loginContainer.classList.remove('shake');
-                }, 400);
-            } else {
-                errorMsg.style.display = 'none';
-                alert('Login imefanikiwa! Karibu ' + usernameInput.value);
-                // Hapa unaweza kuweka code za kupeleka mtumiaji kwenye Dashboard
-                window.location.href = "admin.html";
             }
         });
     </script>
-
 </body>
 </html>
