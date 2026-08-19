@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Admin Dashboard | Kodinela Arena</title>
-    <!-- Supabase SDK -->
+    <title>Admin Control Panel | Kodinela Gaming Arena</title>
+    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -28,8 +28,9 @@
             border-right: 1px solid rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
-        .brand { font-size: 20px; font-weight: bold; color: var(--neon-cyan); margin-bottom: 40px; letter-spacing: 2px; }
+        .brand { font-size: 20px; font-weight: bold; color: var(--neon-cyan); letter-spacing: 2px; margin-bottom: 30px; }
         .brand span { color: var(--neon-pink); }
         .menu-item {
             color: var(--text-dim);
@@ -43,6 +44,19 @@
         }
         .menu-item.active, .menu-item:hover { background: rgba(53, 234, 255, 0.1); color: var(--neon-cyan); }
 
+        .logout-btn {
+            background: rgba(255, 10, 108, 0.2);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: var(--neon-pink); color: #fff; }
+
         /* MAIN CONTENT */
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -54,12 +68,11 @@
             padding: 20px;
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         .stat-card h4 { color: var(--text-dim); font-size: 13px; text-transform: uppercase; }
         .stat-card .number { font-size: 28px; font-weight: bold; color: var(--neon-cyan); margin-top: 5px; }
 
-        /* CONTENT LAYOUT */
+        /* LAYOUT GRID */
         .content-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
         @media(max-width: 1024px) { .content-grid { grid-template-columns: 1fr; } }
 
@@ -71,7 +84,7 @@
         }
         .card-box h3 { margin-bottom: 20px; font-size: 18px; border-left: 3px solid var(--neon-pink); padding-left: 10px; }
 
-        /* FORM STYLING */
+        /* FORMS */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
         input, select, textarea {
@@ -84,7 +97,8 @@
             outline: none;
         }
         input:focus, textarea:focus { border-color: var(--neon-cyan); }
-        button {
+        
+        button.submit-btn {
             background: var(--neon-cyan);
             color: #12141a;
             border: none;
@@ -95,9 +109,9 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        button:hover { background: var(--neon-pink); color: white; box-shadow: 0 0 15px var(--neon-pink); }
+        button.submit-btn:hover { background: var(--neon-pink); color: white; box-shadow: 0 0 15px var(--neon-pink); }
 
-        /* GAMES LIST TABLE */
+        /* LIST OF GAMES */
         .game-item {
             display: flex;
             align-items: center;
@@ -123,45 +137,52 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="brand">KODINELA <span>PANEL</span></div>
-        <a href="#" class="menu-item active">🎮 Manage Games</a>
-        <a href="index.html" target="_blank" class="menu-item">🌐 View Website</a>
+        <div>
+            <div class="brand">KODINELA <span>ADMIN</span></div>
+            <a href="#" class="menu-item active">🎮 Upload Games</a>
+            <a href="index.html" target="_blank" class="menu-item">🌐 View Public Home</a>
+            <a href="dashboard.html" target="_blank" class="menu-item">👤 View User Dashboard</a>
+        </div>
+        <div>
+            <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px;" id="adminEmailDisplay">Checking...</p>
+            <button class="logout-btn" onclick="logoutAdmin()">🚪 Logout Admin</button>
+        </div>
     </div>
 
     <!-- MAIN DASHBOARD -->
     <div class="main-content">
         <div class="header">
-            <h2>Gaming Control Center</h2>
-            <span style="color: var(--neon-cyan); font-weight: bold;">● System Live</span>
+            <h2>Gaming Management Panel</h2>
+            <span style="color: var(--neon-cyan); font-weight: bold;">● Admin Authenticated</span>
         </div>
 
-        <!-- STATS -->
+        <!-- STATS CARDS -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h4>Total Games</h4>
+                <h4>Total Uploaded Games</h4>
                 <div class="number" id="totalGamesCount">0</div>
             </div>
             <div class="stat-card">
                 <h4>Database Status</h4>
-                <div class="number" style="font-size: 18px; color:#4caf50;">Connected</div>
+                <div class="number" style="font-size: 18px; color:#4caf50;">Supabase Connected</div>
             </div>
         </div>
 
-        <!-- CONTENT AREA -->
+        <!-- CONTENT GRID -->
         <div class="content-grid">
             
             <!-- UPLOAD FORM -->
             <div class="card-box">
-                <h3>Upload New Game</h3>
+                <h3>Pakia Game Mpya</h3>
                 <div id="statusBox" class="status"></div>
                 <form id="uploadForm">
                     <div class="form-group">
-                        <label>Game Title</label>
-                        <input type="text" id="title" placeholder="e.g. GTA V" required>
+                        <label>Game Title (Jina la Game)</label>
+                        <input type="text" id="title" placeholder="e.g. Tomb Raider Underworld" required>
                     </div>
                     <div class="form-group">
-                        <label>Slug (URL Key)</label>
-                        <input type="text" id="slug" placeholder="e.g. gta-v" required>
+                        <label>Slug (Key ya Link - Hakuna Spaces)</label>
+                        <input type="text" id="slug" placeholder="e.g. tr-underworld-v1" required>
                     </div>
                     <div class="form-group">
                         <label>Category / Platform</label>
@@ -170,31 +191,32 @@
                             <option value="Android Game">Android Game</option>
                             <option value="Action">Action</option>
                             <option value="Racing">Racing</option>
+                            <option value="RPG / Open World">RPG / Open World</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>File Size</label>
-                        <input type="text" id="file_size" placeholder="e.g. 45 GB au 1.5 GB" required>
+                        <label>File Size (Ukubwa wa Game)</label>
+                        <input type="text" id="file_size" placeholder="e.g. 7.5 GB" required>
                     </div>
                     <div class="form-group">
-                        <label>Cover Image URL</label>
+                        <label>Cover Image URL (Link ya Picha)</label>
                         <input type="url" id="cover_image" placeholder="https://..." required>
                     </div>
                     <div class="form-group">
-                        <label>Download Link URL</label>
-                        <input type="url" id="download_url" placeholder="https://drive.google.com/..." required>
+                        <label>Download Link URL (Google Drive / Mega)</label>
+                        <input type="url" id="download_url" placeholder="https://..." required>
                     </div>
                     <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="description" rows="3" placeholder="Maelezo kuhusu game..."></textarea>
+                        <label>Description (Maelezo)</label>
+                        <textarea id="description" rows="3" placeholder="Maelezo kuhusu game hii..."></textarea>
                     </div>
-                    <button type="submit" id="submitBtn">🚀 Publish Game</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">🚀 Publish Game</button>
                 </form>
             </div>
 
-            <!-- GAMES LIST -->
+            <!-- UPLOADED GAMES LIST -->
             <div class="card-box">
-                <h3>Uploaded Games Manager</h3>
+                <h3>Orodha ya Magame Yaliyopakiwa</h3>
                 <div id="gamesList">
                     <p style="color:var(--text-dim);">Inapakua orodha ya magame...</p>
                 </div>
@@ -203,137 +225,133 @@
         </div>
     </div>
 
-  <script>
-    const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
+    <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
+    <script>
+        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const uploadForm = document.getElementById('uploadForm');
-    const statusBox = document.getElementById('statusBox');
-    const gamesList = document.getElementById('gamesList');
-    const totalGamesCount = document.getElementById('totalGamesCount');
+        // WEKA EMAIL YAKO YA ADMIN HAPA (Ili kuzuia Mtu Mwingine Kuingia)
+        const ADMIN_EMAIL = "admin@kodinela.com"; 
 
-    // 1. ANGALIA KAMA AMELOGIN KAMA ADMIN
-    async function checkAdminAuth() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
+        const uploadForm = document.getElementById('uploadForm');
+        const statusBox = document.getElementById('statusBox');
+        const gamesList = document.getElementById('gamesList');
+        const totalGamesCount = document.getElementById('totalGamesCount');
 
-        // Kama hajajaza email na password kule login.html, mrudishe login mara moja
-        if (!session) {
-            window.location.href = "login.html";
-            return false;
-        }
+        // 1. KAGUA RUHUSA YA ADMIN (AUTH CHECK)
+        async function checkAdminAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
 
-        // (Hiari) Kama unataka kuruhusu email MOJA TU maalum kuwa Admin:
-        /*
-        if (session.user.email !== "admin@kodinela.com") {
-            alert("Akaunti hii haina ruhusa ya Admin!");
-            await supabaseClient.auth.signOut();
-            window.location.href = "login.html";
-            return false;
-        }
-        */
-
-        return true;
-    }
-
-    // 2. VUTA NA ONYESHA MAGAME YOTE
-    async function loadGames() {
-        try {
-            const { data: games, error } = await supabaseClient
-                .from('games')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            totalGamesCount.innerText = games ? games.length : 0;
-
-            if (!games || games.length === 0) {
-                gamesList.innerHTML = `<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>`;
-                return;
+            // Kama hajalogin KABISA au Email yake SIO ya Admin -> Mfukuze mara moja!
+            if (!session || session.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                alert("⛔ Ruhusa Imekataliwa! Sehemu hii ni ya Admin pekee.");
+                window.location.href = "login.html";
+                return false;
             }
 
-            gamesList.innerHTML = games.map(g => `
-                <div class="game-item">
-                    <img src="${g.cover_image || 'https://picsum.photos/100'}" alt="${g.title}">
-                    <div class="game-info">
-                        <h5>${g.title}</h5>
-                        <p>${g.category || 'PC Game'} • ${g.file_size || 'N/A'}</p>
+            document.getElementById('adminEmailDisplay').innerText = "Admin: " + session.user.email;
+            return true;
+        }
+
+        // 2. VUTA NA ONYESHA MAGAME YOTE FROM SUPABASE
+        async function loadGames() {
+            try {
+                const { data: games, error } = await supabaseClient
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                totalGamesCount.innerText = games ? games.length : 0;
+
+                if (!games || games.length === 0) {
+                    gamesList.innerHTML = `<p style="color:var(--text-dim);">Hakuna game iliyopakiwa bado.</p>`;
+                    return;
+                }
+
+                gamesList.innerHTML = games.map(g => `
+                    <div class="game-item">
+                        <img src="${g.cover_image || 'https://picsum.photos/100'}" alt="${g.title}">
+                        <div class="game-info">
+                            <h5>${g.title}</h5>
+                            <p>${g.category || 'PC Game'} • Size: ${g.file_size || 'N/A'}</p>
+                        </div>
+                        <button class="delete-btn" onclick="deleteGame('${g.id}')">Delete</button>
                     </div>
-                    <button class="delete-btn" onclick="deleteGame('${g.id}')">Delete</button>
-                </div>
-            `).join('');
+                `).join('');
 
-        } catch (err) {
-            console.error(err);
-            gamesList.innerHTML = `<p style="color:var(--neon-pink);">Imeshindikana kupakua magame.</p>`;
+            } catch (err) {
+                console.error(err);
+                gamesList.innerHTML = `<p style="color:var(--neon-pink);">Imeshindikana kupakua magame.</p>`;
+            }
         }
-    }
 
-    // 3. UPLOAD GAME MPYA
-    uploadForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.innerText = "Inapakia...";
-        submitBtn.disabled = true;
+        // 3. UPLOAD GAME MPYA
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Inapakia...";
+            submitBtn.disabled = true;
 
-        const gameData = {
-            title: document.getElementById('title').value.trim(),
-            slug: document.getElementById('slug').value.trim().toLowerCase(),
-            category: document.getElementById('category').value,
-            file_size: document.getElementById('file_size').value.trim(),
-            cover_image: document.getElementById('cover_image').value.trim(),
-            download_url: document.getElementById('download_url').value.trim(),
-            description: document.getElementById('description').value.trim()
-        };
+            const gameData = {
+                title: document.getElementById('title').value.trim(),
+                slug: document.getElementById('slug').value.trim().toLowerCase(),
+                category: document.getElementById('category').value,
+                file_size: document.getElementById('file_size').value.trim(),
+                cover_image: document.getElementById('cover_image').value.trim(),
+                download_url: document.getElementById('download_url').value.trim(),
+                description: document.getElementById('description').value.trim()
+            };
 
-        try {
-            const { error } = await supabaseClient.from('games').insert([gameData]);
-            if (error) throw error;
+            try {
+                const { error } = await supabaseClient.from('games').insert([gameData]);
+                if (error) throw error;
 
-            statusBox.className = 'status success';
-            statusBox.innerText = '✅ Game imepakiwa kwa mafanikio!';
-            statusBox.style.display = 'block';
-            uploadForm.reset();
-            loadGames();
-        } catch (err) {
-            statusBox.className = 'status error';
-            statusBox.innerText = '❌ Kosa: ' + err.message;
-            statusBox.style.display = 'block';
-        } finally {
-            submitBtn.innerText = "🚀 Publish Game";
-            submitBtn.disabled = false;
+                statusBox.className = 'status success';
+                statusBox.innerText = '✅ Game imepakiwa kwa mafanikio!';
+                statusBox.style.display = 'block';
+                uploadForm.reset();
+                loadGames(); // Refresh list
+            } catch (err) {
+                statusBox.className = 'status error';
+                statusBox.innerText = '❌ Kosa: ' + err.message;
+                statusBox.style.display = 'block';
+            } finally {
+                submitBtn.innerText = "🚀 Publish Game";
+                submitBtn.disabled = false;
+            }
+        });
+
+        // 4. FUTA GAME
+        async function deleteGame(id) {
+            if (!confirm("Unahakika unataka kufuta game hii kwenye Mfumo?")) return;
+
+            try {
+                const { error } = await supabaseClient.from('games').delete().eq('id', id);
+                if (error) throw error;
+                loadGames();
+            } catch (err) {
+                alert("Kosa wakati wa kufuta: " + err.message);
+            }
         }
-    });
 
-    // 4. FUTA GAME
-    async function deleteGame(id) {
-        if (!confirm("Unahakika unataka kufuta game hii?")) return;
-
-        try {
-            const { error } = await supabaseClient.from('games').delete().eq('id', id);
-            if (error) throw error;
-            loadGames();
-        } catch (err) {
-            alert("Kosa wakati wa kufuta: " + err.message);
+        // 5. LOGOUT FUNCTION
+        async function logoutAdmin() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "login.html";
         }
-    }
 
-    // 5. FUNCTION YA LOGOUT
-    async function logoutAdmin() {
-        await supabaseClient.auth.signOut();
-        window.location.href = "login.html";
-    }
-
-    // ANZA KUKAGUA RUHUSA MARA UKURASA UNAPOFUNGUKA
-    document.addEventListener('DOMContentLoaded', async () => {
-        const isAllowed = await checkAdminAuth();
-        if (isAllowed) {
-            loadGames();
-        }
-    });
-</script>  
+        // EXECUTE UPON PAGE LOAD
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAllowed = await checkAdminAuth();
+            if (isAllowed) {
+                loadGames();
+            }
+        });
+    </script>
 </body>
 </html>
