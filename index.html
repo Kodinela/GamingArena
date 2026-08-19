@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kodinela Gaming Arena | Download PC & Android Games</title>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-body: #20232b;
+            --bg-card: #25262d;
+            --bg-input: #202127;
+            --neon-cyan: #35eaff;
+            --neon-pink: #ff0a6c;
+            --text-main: #eeeeee;
+            --text-dim: #777983;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER / NAVBAR
+        ========================== */
+        header {
+            background: var(--bg-card);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--neon-cyan);
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: var(--text-main);
+        }
+
+        .brand h1 span {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .login-nav-btn {
+            padding: 8px 22px;
+            border-radius: 20px;
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--text-main);
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 10, 108, 0.3);
+        }
+
+        .login-nav-btn:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        /* =========================
+           HERO BANNER
+        ========================== */
+        .hero {
+            margin: 30px 5%;
+            background: linear-gradient(135deg, rgba(37,38,45,0.9), rgba(32,33,39,0.95)),
+                        url('https://picsum.photos/1200/400?gaming') center/cover;
+            border-radius: 25px;
+            padding: 50px 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(53, 234, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+        }
+
+        .hero-badge {
+            background: var(--neon-pink);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            max-width: 500px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-main {
+            padding: 12px 30px;
+            border-radius: 25px;
+            background: var(--neon-cyan);
+            color: #172127;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(53, 234, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--neon-cyan);
+        }
+
+        /* =========================
+           SEARCH & CATEGORIES
+        ========================== */
+        .controls-section {
+            margin: 0 5% 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 48px;
+            background: var(--bg-input);
+            border: none;
+            outline: none;
+            border-radius: 25px;
+            padding: 0 20px 0 45px;
+            color: var(--text-main);
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-dim);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: none;
+            color: var(--text-dim);
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--neon-cyan);
+            color: #172127;
+            box-shadow: 0 0 12px rgba(53, 234, 255, 0.4);
+        }
+
+        /* =========================
+           GAMES GRID
+        ========================== */
+        .section-title {
+            margin: 0 5% 20px;
+            font-size: 22px;
+            letter-spacing: 2px;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 12px;
+        }
+
+        .games-grid {
+            margin: 0 5% 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(53, 234, 255, 0.4);
+            box-shadow: 0 0 20px rgba(53, 234, 255, 0.2);
+        }
+
+        .game-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: var(--bg-input);
+        }
+
+        .game-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .platform-tag {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .game-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: auto;
+            margin-bottom: 15px;
+        }
+
+        .card-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .card-btn:hover {
+            background: var(--neon-cyan);
+            color: #172127;
+            box-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-card);
+            padding: 30px 5%;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hero h2 { font-size: 28px; }
+            .controls-section { flex-direction: column; align-items: stretch; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="brand">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <h1>KODINELA<span>ARENA</span></h1>
+        </a>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#">Games</a></li>
+                <li><a href="#">Accessories</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <a href="login.html" class="login-nav-btn">Login</a>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="hero">
+        <span class="hero-badge">FEATURED GAME</span>
+        <h2>CYBERPUNK 2077</h2>
+        <p>Ingia kwenye mji wa siku zijazo wa Night City. Download leo upate uwezo wa kucheza kwa ubora wa 4K.</p>
+        <a href="game-details.html?slug=cyberpunk-2077" class="btn-main">Download Now (55 GB)</a>
+    </section>
+
+    <!-- SEARCH & CATEGORIES -->
+    <section class="controls-section">
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" placeholder="Tafuta game au accessory...">
+        </div>
+
+        <div class="category-tabs">
+            <button class="tab-btn active">All</button>
+            <button class="tab-btn">PC Games</button>
+            <button class="tab-btn">Android Games</button>
+            <button class="tab-btn">Action</button>
+            <button class="tab-btn">Racing</button>
+            <button class="tab-btn">Accessories</button>
+        </div>
+    </section>
+
+    <!-- POPULAR GAMES -->
+    <h3 class="section-title">POPULAR GAMES</h3>
+    <section class="games-grid" id="gamesContainer">
+        <!-- Data itajazwa hapa ki-automatic kutoka Supabase -->
+        <p style="color:var(--text-dim); grid-column: 1/-1; text-align: center; padding: 40px;">Inapakua games...</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Kodinela Gaming Arena. Haki zote zimehifadhiwa.</p>
+    </footer>
+
+    <!-- SUPABASE INTEGRATION SCRIPT -->
+    <script>
+        const SUPABASE_URL = "https://acjomyksibajajgsypkm.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_alINFU4nBPTFyTrJcpCGcQ_P_QiX83z";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchGamesFromDatabase() {
+            const container = document.getElementById('gamesContainer');
+
+            try {
+                const { data: games, error } = await supabaseClient
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!games || games.length === 0) {
+                    container.innerHTML = '<p style="color:var(--text-dim); grid-column: 1/-1; text-align: center; padding: 40px;">Bado hakuna game iliyopakiwa. Tumia admin.html kuongeza game mpya.</p>';
+                    return;
+                }
+
+                container.innerHTML = games.map(game => `
+                    <div class="game-card">
+                        <img src="${game.cover_image || 'https://picsum.photos/300/180?gaming'}" class="game-img" alt="${game.title}">
+                        <div class="game-info">
+                            <span class="platform-tag">${game.category || 'PC GAME'}</span>
+                            <h4 class="game-title">${game.title}</h4>
+                            <div class="game-meta">
+                                <span>Size: ${game.file_size || 'N/A'}</span>
+                                <span>★ 5.0</span>
+                            </div>
+                            <a href="game-details.html?slug=${game.slug}" class="card-btn">View & Download</a>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('Kosa wakati wa kuvuta games:', err);
+                container.innerHTML = '<p style="color:var(--neon-pink); grid-column: 1/-1; text-align: center; padding: 40px;">Kosa limetokea wakati wa kupakua data. Jaribu kurefresh ukurasa.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGamesFromDatabase);
+    </script>
+</body>
+</html>
